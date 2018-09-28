@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SettingsFields xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <App_Folder>C:\progs\CyberLock\</App_Folder>
+  <Service_Name>CyberLock</Service_Name>
+  <Service_Port>1388</Service_Port>
+  <Service_Ip>192.168.0.99</Service_Ip>
+  <Log_Level>Error</Log_Level>
+  <RemTimer_Width>60</RemTimer_Width>
+  <RemTimer_Height>25</RemTimer_Height>
+  <RemTimer_FontSize>14</RemTimer_FontSize>
+  <RemTimer_RefreshDelay>100</RemTimer_RefreshDelay>
+  <KP_TimeWaiting>60</KP_TimeWaiting>
+  <KP_ExlusionsList>
+    <string>avp</string>
+    <string>Inspector</string>
+    <string>conhost</string>
+  </KP_ExlusionsList>
+  <KP_IncludesList>
+    <string>hl</string>
+  </KP_IncludesList>
+</SettingsFields>

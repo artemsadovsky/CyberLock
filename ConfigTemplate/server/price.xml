@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<prices>
+  <price name="4000" mode="true" costPerHourGame="4000" costPerHourInternet="0" />
+  <price name="6000" mode="true" costPerHourGame="6000" costPerHourInternet="0" />
+  <price name="Свои" mode="false" costPerHourGame="0" costPerHourInternet="0" />
+</prices>

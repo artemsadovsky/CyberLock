@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<prices>
+  <price name="Дневной" mode="true" costPerHourGame="5000" costPerHourInternet="5000" />
+  <price name="Ночной" mode="true" costPerHourGame="10000" costPerHourInternet="10000" />
+  <price name="Безлимитный" mode="false" costPerHourGame="0" costPerHourInternet="0" />
+</prices>

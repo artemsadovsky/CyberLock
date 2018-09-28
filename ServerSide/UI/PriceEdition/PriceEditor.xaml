@@ -1,0 +1,77 @@
+﻿<Window x:Class="SunRise.CyberLock.ServerSide.UI.PriceEdition.PriceEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:extToolkit="http://schemas.xceed.com/wpf/xaml/toolkit" 
+        Title="Управление тарифами" Height="320" Width="600" WindowStyle="ToolWindow" ShowInTaskbar="False">
+    <Window.Resources>
+        <DataTemplate x:Key="PriceName">
+            <TextBlock Text="{Binding Name}" HorizontalAlignment="Left"></TextBlock>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid Height="230" VerticalAlignment="Top">
+            <Grid 
+                Width="220" Height="35" 
+                Margin="10,10,0,0" 
+                VerticalAlignment="Top" HorizontalAlignment="Left">
+                <extToolkit:WatermarkTextBox x:Name="tbNewPrice" Height="23" Width="190" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="tbNewPrice_TextChanged">
+                    <extToolkit:WatermarkTextBox.Watermark>
+                        <TextBlock Text="Введите название нового тарифа" Width="190" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </extToolkit:WatermarkTextBox.Watermark>
+                </extToolkit:WatermarkTextBox>
+                <Button Name="btnAdd" IsEnabled="False" Width="23" Height="23" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="195,0,0,0" Click="btnAdd_Click">
+                    <Button.Content>
+                        <Image Source="../ICO/add.png"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+            <ListView Name="listView_Price"
+                ItemsSource="{Binding}"
+                SelectedItem="{Binding SelectedPrice}"
+                Width="220" Height="Auto"
+                HorizontalAlignment="Left" 
+                Margin="10,50,0,0" 
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single">
+                <ListView.Resources>
+                    <Style x:Key="CustomHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </Style>
+                </ListView.Resources>
+                <ListView.View>
+                    <GridView ColumnHeaderContainerStyle="{StaticResource CustomHeaderStyle}">
+                        <GridViewColumn Width="220" CellTemplate="{StaticResource PriceName}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <extToolkit:PropertyGrid x:Name="pricePropertiesGrid" 
+    		    HorizontalAlignment="Right" 
+    		    Width="289" Margin="0,15,10,0"
+                SelectedObject="{Binding SelectedPrice}"
+                IsCategorized="True" NameColumnWidth="120" 
+                DisplaySummary="False" ShowSearchBox="False" ShowSortOptions="False"/>
+            <Button Name="btnUp" HorizontalAlignment="Left" Margin="240,50,0,0" VerticalAlignment="Top" Width="23" IsEnabled="False">
+                <Button.Content>
+                    <Image Source="../ICO/up.png"/>
+                </Button.Content>
+            </Button>
+            <Button Name="btnDown" HorizontalAlignment="Left" Margin="240,78,0,0" VerticalAlignment="Top" Width="23" IsEnabled="False">
+                <Button.Content>
+                    <Image Source="../ICO/down.png"/>
+                </Button.Content>
+            </Button>
+            <Button Name="btnDelete" HorizontalAlignment="Left" Margin="240,130,0,0" VerticalAlignment="Top" Width="23" Click="btnDelete_Click">
+                <Button.Content>
+                    <Image Source="../ICO/delete.png"/>
+                </Button.Content>
+            </Button>
+        </Grid>
+        <Button Name="btnOK" HorizontalAlignment="Left" Margin="471,247,0,0" VerticalAlignment="Top" Width="103" Height="30" Click="btnOK_Click">
+            <Button.Content>
+                <DockPanel>
+                    <Image Source="../ICO/accept.png"/>
+                    <Label Content="Готово"/>
+                </DockPanel>
+            </Button.Content>
+        </Button>
+    </Grid>
+</Window>

@@ -1,0 +1,52 @@
+﻿<locker:Locker x:Class="SunRise.CyberLock.ClientSide.UI.LockerWindow"
+    xmlns:locker="clr-namespace:SunRise.CyberLock.ClientSide.BL;assembly=BL"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:tn="clr-namespace:SunRise.CyberLock.ClientSide.Utils.TaskbarNotifier;assembly=TaskbarNotifier"
+    Title="Locker"
+	ShowInTaskbar="False"
+    Background="DarkGray"
+    WindowStyle="None" Topmost="True" WindowState="Maximized">
+    <!--Background="AliceBlue" local:GlassEffect.IsEnabled="true"-->
+    <!--WindowState="Maximized"-->
+    <!--Background="#FF618AF9"-->
+    <Grid Name="MainGrid" Margin="0,-1,0,1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Name="lb_sInform" Foreground="#FFEEE0E0"/>
+        <Label Grid.Row="1" Name="lb_password" Content="" Foreground="#FFEEE0E0" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+        <Grid Name="gridFinisher" Grid.Row="2" Visibility="Hidden">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" HorizontalAlignment="Center" Orientation="Horizontal">
+                <Label Content="До закрытия незавершенных приложений осталось: " FontSize="16" Foreground="Red"/>
+                <Label Name="lb_mInform" FontSize="16" Foreground="Red" />
+            </StackPanel>
+            <Label Grid.Row="1" FontSize="10" Foreground="#FFEEE0E0" Content="Для продолжения работы обратитесь к администратору" HorizontalAlignment="Center"/>
+            <Label Grid.Row="2" FontSize="10" Foreground="#FFEEE0E0" Content="Для сброса времени отсчета нажмите 'R'" HorizontalAlignment="Center"/>
+        </Grid>
+        <Label Grid.Row="3" Name="lb_bInform"  FontSize="80" Foreground="Yellow" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontWeight="Bold"/>
+        <Label Grid.Row="5" Name="lb_eInform" Foreground="Red" FontSize="20"/>
+
+        <tn:NotifyIcon x:Name="NotifyIcon" Text="Монитор сеанса" Icon="./ICO/NotifyIcon.ico">
+            <tn:NotifyIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Время" Click="NotifyIconOpen_Click" />
+                    <!--<MenuItem Header="Configure..." Click="NotifyIconConfigure_Click"/>
+                    <Separator/>
+                    <MenuItem Header="Exit" Click="NotifyIconExit_Click" />-->
+                </ContextMenu>
+            </tn:NotifyIcon.ContextMenu>
+        </tn:NotifyIcon>
+    </Grid>
+</locker:Locker>

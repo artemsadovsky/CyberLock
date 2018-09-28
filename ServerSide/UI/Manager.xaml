@@ -1,0 +1,228 @@
+﻿<Window x:Class="SunRise.CyberLock.ServerSide.UI.Manager"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local ="clr-namespace:SunRise.CyberLock.ServerSide.UI.Converter"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    WindowStartupLocation="CenterScreen"
+    Title="SunRise CyberLock (Manager)" MinHeight="250" MinWidth="720" mc:Ignorable="d" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        d:DesignWidth="436" SizeToContent="WidthAndHeight" 
+        Closing="Window_Closing"
+        Height="583">
+    <Window.Resources>
+        <local:SourceConverter x:Key="SourceConverter"/>
+        <local:VisibilityConverter x:Key="VisibilityConverter"/>
+        <ContextMenu x:Key="lwMenu">
+            <ContextMenu.Items>
+                <MenuItem Header="Создать сеанс" Visibility="{Binding ElementName=listView_clients, Path=SelectedItems.Count, Converter={StaticResource VisibilityConverter}}"/>
+                <MenuItem Header="Пусто"/>
+                <MenuItem Header="Пусто"/>
+                <MenuItem Header="Пусто"/>
+            </ContextMenu.Items>
+        </ContextMenu>
+        <Style TargetType="{x:Type ListViewItem}">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="ContextMenu" Value="{StaticResource lwMenu}" />
+            <Style.Triggers>
+                <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                    <!--<Setter Property="Background" Value="#afcfed"/>-->
+                    <Setter Property="Background" Value="#FFA8A7AC"/>
+                </Trigger>
+                <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                    <Setter Property="Background" Value="#fafafa"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="Orange"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <DataTemplate x:Key="Comp_Ico">
+            <Image Height="17" Width="17" Source="{Binding Status,Converter={StaticResource ResourceKey=SourceConverter}}"></Image>
+        </DataTemplate>
+        <DataTemplate x:Key="Comp_Identity">
+            <StackPanel Margin="0,0,0,0" Orientation="Horizontal">
+                <TextBlock Text="{Binding Name}" FontWeight="Bold"></TextBlock>
+                <TextBlock Text="    (" FontSize="8"></TextBlock>
+                <TextBlock Text="{Binding IP}" FontSize="8"></TextBlock>
+                <TextBlock Text=")" FontSize="8"></TextBlock>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="Comp_RemainingTime">
+            <TextBlock HorizontalAlignment="Center" Text="{Binding RemainingTime}" FontWeight="Bold"></TextBlock>
+        </DataTemplate>
+        <DataTemplate x:Key="Comp_StartSession">
+            <TextBlock HorizontalAlignment="Center" Text="{Binding StartSessionTime}"></TextBlock>
+        </DataTemplate>
+        <DataTemplate x:Key="Comp_EndSession">
+            <TextBlock HorizontalAlignment="Center" Text="{Binding EndSessionTime}"></TextBlock>
+        </DataTemplate>
+    </Window.Resources>
+    <Window.Background>
+        <ImageBrush ImageSource="Images/background3.jpg"/>
+        <!--<SolidColorBrush Color="LightSteelBlue"/>-->
+    </Window.Background>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="23" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" Height="23" VerticalAlignment="Top" Grid.ColumnSpan="2">
+            <MenuItem Header="Файл" RenderTransformOrigin="0.5,0.5">
+                <MenuItem Header="MenuItem" HorizontalAlignment="Left" Width="145"/>
+                <MenuItem Header="Выход" HorizontalAlignment="Left" Width="145"/>
+            </MenuItem>
+            <MenuItem Header="Настройки">
+                <MenuItem Name="menu_PriceEdit" Header="Редактор тарифов" HorizontalAlignment="Left" Width="Auto" Click="menu_PriceEdit_Click"/>
+            </MenuItem>
+        </Menu>
+        <TextBlock Grid.Row="1" Name="tb_Clock" Text="{Binding Source={x:Static sys:DateTime.Now},StringFormat='HH:mm:ss'}"
+                        FontFamily="./Fonts/#Neuropol" FontSize="36" Foreground="Yellow" TextDecorations="{x:Null}" FontWeight="Bold" TextAlignment="Center"/>
+
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="250"/>
+            </Grid.ColumnDefinitions>
+            <ListView Grid.Column="0" Name="listView_clients"  MinHeight="500"
+                  Height="Auto" Width="Auto"
+                  HorizontalAlignment="Stretch" 
+                  VerticalAlignment="Top" 
+                  ItemsSource="{Binding}" 
+                  AlternationCount="2"
+                  Background="{x:Null}"
+                  BorderBrush="#FF828790" UseLayoutRounding="False" SnapsToDevicePixels="True" AllowDrop="True"
+                  MouseDoubleClick="CreateSession" 
+                  MouseLeftButtonDown="listView_clients_MouseLeftButtonDown"
+                  PreviewMouseLeftButtonDown="listView_clients_PreviewMouseLeftButtonDown"
+                  GridViewColumnHeader.Click="listView_clients_Header_Click"
+                  Drop="ListBox_Drop" SelectionChanged="listView_clients_SelectionChanged">
+                <ListView.View>
+                    <GridView>
+                        <GridView.ColumnHeaderContainerStyle>
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="Height"  Value="17"/>
+                                <Setter Property="FontSize"  Value="8"/>
+                                <Setter Property="FontWeight"  Value="Bold"/>
+                            </Style>
+                        </GridView.ColumnHeaderContainerStyle>
+                        <GridView.Columns>
+                            <GridViewColumn Header="" Width="Auto" CellTemplate="{StaticResource Comp_Ico}"/>
+                            <GridViewColumn Width="Auto" CellTemplate="{StaticResource Comp_Identity}">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Content="Компьютер" Name="Name" />
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                            <GridViewColumn Width="90" Header="Осталось" CellTemplate="{StaticResource Comp_RemainingTime}"/>
+                            <!--<GridViewColumn Width="100" Header="Осталось" DisplayMemberBinding="{Binding Path=RemainingTime}"/>-->
+                            <GridViewColumn Width="90" Header="Старт" CellTemplate="{StaticResource Comp_StartSession}"/>
+                            <!--<GridViewColumn Width="100" Header="Старт" DisplayMemberBinding="{Binding Path=StartSessionTime}"/>-->
+                            <GridViewColumn Width="90" Header="Стоп" CellTemplate="{StaticResource Comp_EndSession}"/>
+                            <!--<GridViewColumn Width="100" Header="Стоп" DisplayMemberBinding="{Binding Path=EndSessionTime}"/>-->
+                        </GridView.Columns>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="300"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0" Content="Создать сеанс" Height="23" HorizontalAlignment="Left"  Name="button_createSession" VerticalAlignment="Top" Width="163" Click="CreateSession" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                    <Button Grid.Row="1" Content="Изменить сеанс" Height="23" HorizontalAlignment="Left"  Name="button_changeSession" VerticalAlignment="Top" Width="163" Click="button_changeSession_Click" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                    <Button Grid.Row="2" Content="+ Сумма" Height="23" HorizontalAlignment="Left"  Name="button_addPaymentToSession" VerticalAlignment="Top" Width="163" Click="button_addPaymentToSession_Click" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                    <Button Grid.Row="3" Content="+ Время" Height="23" HorizontalAlignment="Left"  Name="button_addTimeToSession" VerticalAlignment="Top" Width="163" Click="button_addTimeToSession_Click" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                    <Button Grid.Row="5" Content="Пауза" Height="23" HorizontalAlignment="Left"  Name="button_pauseSession" VerticalAlignment="Top" Width="163" Click="button_pauseSession_Click" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                    <Button Grid.Row="6" Content="Завершить сеанс" Height="23" HorizontalAlignment="Left"  Name="button_closeSession" VerticalAlignment="Top" Width="163" Click="button_closeSession_Click" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                    <Button Grid.Row="8" Content="Снять задачи" Height="23" HorizontalAlignment="Left"  Name="button_KillProcesses" VerticalAlignment="Top" Width="163" Click="button_KillProcesses_Click" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                    <Button Grid.Row="10" Content="Выключить компьютер" Height="23" HorizontalAlignment="Left"  Name="button_Shutdown" VerticalAlignment="Top" Width="163" Click="button_Shutdown_Click" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                    <Button Grid.Row="11" Content="Перезагрузить компьютер" Height="23" HorizontalAlignment="Left"  Name="button_Restart" VerticalAlignment="Top" Width="163" Click="button_Restart_Click" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                    <!--<StackPanel>
+                        <Expander Margin="5" Header="Управление сеансом" Padding="5" BorderBrush="LightBlue" BorderThickness="2">
+                            <Grid HorizontalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="25"/>
+                                </Grid.RowDefinitions>                                    
+                                <Button Grid.Row="0" Content="Создать сеанс" Height="23" HorizontalAlignment="Left"  Name="button_createSession" VerticalAlignment="Top" Width="220" Click="CreateSession" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                                <Button Grid.Row="1" Content="Изменить сеанс" Height="23" HorizontalAlignment="Left"  Name="button_changeSession" VerticalAlignment="Top" Width="220" Click="button_changeSession_Click" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                                <Button Grid.Row="2" Content="+ Сумма" Height="23" HorizontalAlignment="Left"  Name="button_addPaymentToSession" VerticalAlignment="Top" Width="220" Click="button_addPaymentToSession_Click" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                                <Button Grid.Row="3" Content="+ Время" Height="23" HorizontalAlignment="Left"  Name="button_addTimeToSession" VerticalAlignment="Top" Width="220" Click="button_addTimeToSession_Click" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                                <Button Grid.Row="5" Content="Пауза" Height="23" HorizontalAlignment="Left"  Name="button_pauseSession" VerticalAlignment="Top" Width="220" Click="button_pauseSession_Click" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                                <Button Grid.Row="6" Content="Завершить сеанс" Height="23" HorizontalAlignment="Left"  Name="button_closeSession" VerticalAlignment="Top" Width="220" Click="button_closeSession_Click" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                            </Grid>
+                        </Expander>
+                        <Expander Margin="5" Header="Управление задачами" Padding="5" BorderBrush="LightBlue" BorderThickness="2">
+                            <Grid HorizontalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="25"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Row="0" Content="Снять задачи" Height="23" HorizontalAlignment="Left"  Name="button_KillProcesses" VerticalAlignment="Top" Width="220" Click="button_KillProcesses_Click" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                            </Grid>
+                        </Expander>
+                        <Expander Margin="5" Header="Управление компьютером" Padding="5" BorderBrush="LightBlue" BorderThickness="2">
+                            <Grid HorizontalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="25"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Row="0" Content="Выключить компьютер" Height="23" HorizontalAlignment="Left"  Name="button_Shutdown" VerticalAlignment="Top" Width="220" Click="button_Shutdown_Click" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                                <Button Grid.Row="1" Content="Перезагрузить компьютер" Height="23" HorizontalAlignment="Left"  Name="button_Restart" VerticalAlignment="Top" Width="220" Click="button_Restart_Click" Background="{x:Null}" Foreground="Azure" FontWeight="Bold" />
+                            </Grid>
+                        </Expander>
+                    </StackPanel>-->
+                </Grid>
+                <Grid Grid.Row="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Row="1" Grid.Column="1" Content="Получить данные" Click="ShowDetailsClick" Background="{x:Null}" Foreground="Azure" FontWeight="Bold"/>
+                    <Label Grid.Row="2" Grid.Column="0" Content="Тариф: " HorizontalAlignment="Right" Foreground="Yellow"/>
+                    <Label Grid.Row="3" Grid.Column="0" Content="Стоимость: " HorizontalAlignment="Right" Foreground="Yellow"/>
+                    <Label Grid.Row="4" Grid.Column="0" Content="Оплата: " HorizontalAlignment="Right" Foreground="Yellow"/>
+                    <Label Grid.Row="5" Grid.Column="0" Content="Отработано: " HorizontalAlignment="Right" Foreground="Yellow"/>
+                    <Label Name="tb_tarrifName" BorderBrush="Gray" BorderThickness="1" Grid.Row="2" Grid.Column="1" Width="150" IsEnabled="False" HorizontalAlignment="Right" Background="{x:Null}" Foreground="Yellow"/>
+                    <Label Name="tb_tarrifCost" BorderBrush="Gray" BorderThickness="1" Grid.Row="3" Grid.Column="1" Width="150" IsEnabled="False" HorizontalAlignment="Right" Background="{x:Null}" Foreground="Yellow"/>
+                    <Label Name="tb_totalMoney" BorderBrush="Gray" BorderThickness="1" Grid.Row="4" Grid.Column="1" Width="150" IsEnabled="False" HorizontalAlignment="Right" Background="{x:Null}" Foreground="Yellow"/>
+                    <Label Name="tb_workMoney" BorderBrush="Gray" BorderThickness="1" Grid.Row="5" Grid.Column="1" Width="150" IsEnabled="False" HorizontalAlignment="Right" Background="{x:Null}" Foreground="Yellow"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

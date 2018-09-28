@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<computers>
+  <computer id="1" name="next-03" ip="192.168.0.3" />
+  <computer id="2" name="next-19" ip="192.168.0.19" />
+</computers>

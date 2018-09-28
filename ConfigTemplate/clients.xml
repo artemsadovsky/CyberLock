@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<computers>
+  <computer id="1" name="Next-101" ip="localhost" />
+  <computer id="2" name="Next-102" ip="localhost" />
+  <computer id="3" name="Next-103" ip="localhost" />
+  <computer id="4" name="Next-104" ip="localhost" />
+  <computer id="5" name="Next-105" ip="localhost" />
+  <computer id="6" name="Next-106" ip="localhost" />
+  <computer id="7" name="Next-107" ip="localhost" />
+  <computer id="8" name="Next-108" ip="localhost" />
+  <computer id="1" name="Next-201" ip="localhost" />
+  <computer id="2" name="Next-202" ip="localhost" />
+  <computer id="3" name="Next-203" ip="localhost" />
+  <computer id="4" name="Next-204" ip="localhost" />
+  <computer id="5" name="Next-205" ip="localhost" />
+  <computer id="6" name="Next-206" ip="localhost" />
+  <computer id="7" name="Next-207" ip="localhost" />
+  <computer id="8" name="Next-208" ip="localhost" />
+  <computer id="1" name="Next-301" ip="localhost" />
+  <computer id="2" name="Next-402" ip="localhost" />
+  <computer id="3" name="Next-503" ip="localhost" />
+  <computer id="4" name="Next-604" ip="localhost" />
+  <computer id="5" name="Next-705" ip="localhost" />
+  <computer id="6" name="Next-806" ip="localhost" />
+  <computer id="7" name="Next-907" ip="localhost" />
+  <computer id="8" name="Next-308" ip="localhost" />
+</computers>

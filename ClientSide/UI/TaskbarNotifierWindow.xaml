@@ -1,0 +1,71 @@
+﻿<tn:TaskbarNotifier x:Class="SunRise.CyberLock.ClientSide.UI.TaskbarNotifierWindow"
+    xmlns:tn="clr-namespace:SunRise.CyberLock.ClientSide.Utils.TaskbarNotifier;assembly=TaskbarNotifier"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Уведомление" Height="100" Width="240"
+    x:Name="TaskBarNotifier" ShowInTaskbar="False">
+    <tn:TaskbarNotifier.Resources>
+
+        <DataTemplate x:Key="ItemsTemplate">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Margin="0,5,0,0" VerticalAlignment="Top" Orientation="Horizontal">
+                    <TextBlock  Text="{Binding Path=Title}" />
+                    <TextBlock Text=": " />
+                </StackPanel>
+                <Label Grid.Column="1" Margin="0,-1,0,0" HorizontalAlignment="Left" ToolTip="Click to open">
+                    <Hyperlink Click="Item_Click" Tag="{Binding}">
+                        <TextBlock Text="{Binding Path=Message}" TextWrapping="Wrap" />
+                    </Hyperlink>
+                </Label>
+            </Grid>
+        </DataTemplate>
+
+    </tn:TaskbarNotifier.Resources>
+
+    <Grid Margin="5,5,5,5">
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="40" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*"  />
+            <RowDefinition Height="5" />
+        </Grid.RowDefinitions>
+
+        <Label Name="lb_RemainingTime" Grid.Row="0" Margin="8,0,8,0" FontSize="18" FontWeight="Bold" 
+                           Content="Оставшееся время" Foreground="#FF141EE6">
+        </Label>
+
+        <Button Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="15" Height="15" Click="HideButton_Click">
+            <Button.ToolTip>Hide</Button.ToolTip>
+            <Image>
+                <Image.Source>
+                    <DrawingImage>
+                        <DrawingImage.Drawing>
+                            <GeometryDrawing>
+                                <GeometryDrawing.Pen>
+                                    <Pen Brush="Black" Thickness="3"/>
+                                </GeometryDrawing.Pen>
+                                <GeometryDrawing.Geometry >
+                                    <GeometryGroup>
+                                        <LineGeometry StartPoint="0,0" EndPoint="20,20"/>
+                                        <LineGeometry StartPoint="20,0" EndPoint="0,20"/>
+                                    </GeometryGroup>
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingImage.Drawing>
+                    </DrawingImage>
+                </Image.Source>
+            </Image>
+        </Button>
+
+
+    </Grid>
+
+</tn:TaskbarNotifier>

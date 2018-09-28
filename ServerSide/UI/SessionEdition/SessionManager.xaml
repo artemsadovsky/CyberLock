@@ -1,0 +1,197 @@
+﻿<Window x:Class="SunRise.CyberLock.ServerSide.UI.SessionEdition.SessionManager"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:extToolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:conv="clr-namespace:SunRise.CyberLock.ServerSide.UI.Converter"
+        Title="SessionManagerWindow" Height="497" Width="370" WindowStyle="ToolWindow" ShowInTaskbar="False">
+    <Window.Resources>
+        <conv:AmountConverter x:Key="AmountConverter"/>
+        <conv:EndSessionHourConverter x:Key="EndSessionHourConverter" />
+        <conv:EndSessionMinuteConverter x:Key="EndSessionMinuteConverter" />
+        <conv:DateTimeConverter x:Key="DateTimeConverter" />
+        <Style x:Key="DigitalLabel" TargetType="{x:Type Label}">
+            <!--<Setter Property="FontFamily" Value="Terminator Cyr 4"/>-->
+            <Setter Property="FontFamily" Value="Impact"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#FF3880D6"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="BigDigitalLabel" TargetType="{x:Type Label}" BasedOn="{StaticResource DigitalLabel}">
+            <Setter Property="FontSize" Value="36"/>
+            <Setter Property="Height" Value="45"/>
+        </Style>
+        <Style x:Key="DigitalBox" TargetType="{x:Type TextBox}">
+            <Setter Property="FontFamily" Value="Impact"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="#FF3880D6"/>
+        </Style>
+        <Style x:Key="BigDigitalBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource DigitalBox}">
+            <Setter Property="FontSize" Value="36"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Width" Value="50"/>
+        </Style>
+    </Window.Resources>
+    <Grid Name="mainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80" />
+            <RowDefinition Height="60" />
+            <RowDefinition Height="60" />
+            <RowDefinition Height="60" />
+            <RowDefinition Height="80" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="60" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Name="tariffGrid" Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="1" Content="Тариф:" VerticalAlignment="Center"/>
+            <ComboBox  Grid.Row="0" Grid.Column="2" Name="comboBox_Price"
+                    ItemsSource="{Binding PriceList, Mode=OneWay}"
+                    DisplayMemberPath="Name"
+                    SelectedValue="{Binding SelectedTariff}"
+                    Height="23" Width="242"/>
+            <CheckBox Grid.Row="1" Grid.Column="2" Name="checkBox_IsInternet" IsEnabled="False" Content="Включить Интернет"
+                  IsChecked="{Binding IsInternetSession, Mode=TwoWay}"/>
+        </Grid>
+        <Grid Name="PaymentGrid" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Name="cPaymentColDef" Width="110"/>
+                <ColumnDefinition Width="110"/>
+                <ColumnDefinition Width="110"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Name="CurrentPaymentGrid" Grid.Column="1" Height="46" Width="100"
+                  IsEnabled="False">
+                <Label Height="25" VerticalAlignment="Top">
+                    <TextBlock Text="Оплачено:" Height="23" />
+                </Label>
+                <TextBox Name="tb_CurrentPayment"
+                    Text=""
+                    Height="23" Width="100"
+                    HorizontalContentAlignment="Center" VerticalAlignment="Bottom" />
+            </Grid>
+            <Grid Name="AmountGrid" Grid.Column="2" Height="46" Width="100" >
+                <Label Height="25" VerticalAlignment="Top">
+                    <TextBlock Text="Сумма:" Height="23" />
+                </Label>
+                <TextBox Name="tb_Amount"
+                    Text="{Binding Payment, StringFormat=0.00}" 
+                    IsEnabled="{Binding IsLimited}"
+                    Height="23" Width="100"
+                    HorizontalContentAlignment="Center" VerticalAlignment="Bottom" TextChanged="tb_Amount_TextChanged" KeyDown="control_KeyDown"/>
+            </Grid>
+            <Grid Name="TotalPaymentGrid" Grid.Column="3" Height="46" Width="100"  
+                    IsEnabled="False">
+                <Label Height="25" VerticalAlignment="Top">
+                    <TextBlock Text="Общая сумма:" Height="23" />
+                </Label>
+                <TextBox Name="tb_TotalPayment"
+                    Height="23" Width="100"
+                    HorizontalContentAlignment="Center" VerticalAlignment="Bottom" TextChanged="tb_Amount_TextChanged" />
+            </Grid>
+        </Grid>
+        <Grid Name="sliderHGrid" Grid.Row="2" Height="46" Width="310">
+            <Label Content="Часы"
+                Height="23" Width="100"  
+                VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <!--SelectionEnd="{Binding CurrentHours, Mode=OneWay}" IsSelectionRangeEnabled="{Binding IsModification, Mode=OneWay}"-->
+            <Slider Name="sliderHours"
+                Value="{Binding RemainingHours}"
+                IsEnabled="{Binding IsLimited}"
+                Height="23" Width="300" 
+                HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                TickFrequency="1" Maximum="23" SmallChange="1" 
+                IsSnapToTickEnabled="True" IsMoveToPointEnabled="False" 
+                TickPlacement="BottomRight" />
+        </Grid>
+        <Grid Name="sliderMGrid" Grid.Row="3" Height="46" Width="310"  >
+            <Label Content="Минуты"
+                Height="23" Width="100"  
+                VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <!--SelectionEnd="{Binding CurrentMinutes, Mode=OneWay}" IsSelectionRangeEnabled="{Binding IsModification, Mode=OneWay}"-->
+            <Slider Name="sliderMinutes" 
+                Value="{Binding RemainingMinutes}" 
+                IsEnabled="{Binding IsLimited}"
+                Height="23" Width="300" 
+                HorizontalAlignment="Center" VerticalAlignment="Bottom" 
+                TickFrequency="1" Maximum="59" SmallChange="1" 
+                IsSnapToTickEnabled="True" IsMoveToPointEnabled="False" 
+                TickPlacement="BottomRight"/>
+        </Grid>
+        <Grid Name="ClockGrid" Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="1" Name="RemainingTime_Grid" Height="70"
+                  IsEnabled="False">
+                <!--IsEnabled="{Binding IsLimited}">-->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Height="42" VerticalAlignment="Top">
+                    <TextBlock TextWrapping="Wrap" Text="Время (чч:мм)"/>
+                </Label>
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <TextBox Name="tb_Hour" Style="{StaticResource BigDigitalBox}"
+                             Text="{Binding ElementName=sliderHours, Path=Value, StringFormat=00}"
+                             HorizontalContentAlignment="Center" TextChanged="tb_Hour_TextChanged" Foreground="#FF3399FF"/>
+                    <Label Content=":" Style="{StaticResource BigDigitalLabel}" Foreground="#FF3399FF"/>
+                    <TextBox Name="tb_Minute" Style="{StaticResource BigDigitalBox}"
+                             Text="{Binding ElementName=sliderMinutes, Path=Value, StringFormat=00}"
+                             HorizontalContentAlignment="Center" TextChanged="tb_Minute_TextChanged" Foreground="#FF3399FF"/>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Column="2" Name="EndTimeGrid" Height="60" Width="120"
+                   IsEnabled="False">
+                <!--IsEnabled="{Binding IsLimited}">-->
+                <Label Height="42" VerticalAlignment="Top">
+                    <TextBlock Text="Завершение (чч:мм)" TextWrapping="Wrap" />
+                </Label>
+                <TextBox Name="tb_SessionExpire" Style="{StaticResource DigitalBox}"
+                         Text="{Binding SessionExpireTime, Mode=OneWay, StringFormat=HH:mm}"
+                         Height="23" Width="120"
+                         HorizontalAlignment="Left" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" TextChanged="tb_SessionExpire_TextChanged" Foreground="#FF3399FF"/>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="5">
+        </Grid>
+        <Grid Grid.Row="6">
+            <Label Name="label_Information" Content="" Width="320" HorizontalContentAlignment="Center"/>
+        </Grid>
+        <Grid Grid.Row="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <CheckBox Grid.Column="0" Name="checkBox_IsToKillProcesses" 
+                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                      Content="Завершить все задачи"
+                  IsChecked="{Binding ToKillProcesses, Mode=TwoWay}" Foreground="Red"/>
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right" Margin="5" >
+                <Button Name="btn_OK" Content="Создать сеанс" Width="110" Margin="2" Click="btn_OK_Click"
+                        IsEnabled="{Binding Amount, Converter={StaticResource ResourceKey=AmountConverter}}"/>
+                <Button Name="btn_Cancel" Content="Отмена" Width="75" Margin="2" Click="btn_Cancel_Click" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
